@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import InputForm from "./components/InputForm";
+import NotesList from "./components/NotesList";
+import { useState } from "react";
+import { nanoid } from "nanoid";
 
 function App() {
+  const [notes, setNotes] = useState([]);
+
+  const addNote = (text) => {
+    const date = new Date();
+    const newNote = {
+      id: nanoid(),
+      text: text,
+      date: date.toLocaleDateString(),
+    };
+    const newNotes = [...notes, newNote];
+    // Cause the components to re-render, so that list updates with new data
+    setNotes(newNotes);
+  };
+
+  const deleteNote = (id) => {
+    const newNotes = notes.filter((note) => note.id !== id);
+    setNotes(newNotes);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Note-Taking-App</h1>
+      <div>
+        <InputForm handleAddNote={addNote}></InputForm>
+      </div>
+      <div>
+        <NotesList notes={notes} handleDeleteNote={deleteNote}></NotesList>
+      </div>
     </div>
   );
 }
